@@ -1,4 +1,25 @@
+unreadMessageCount = 0
+
+setDocumentTitle = ->
+  title = 'CoffeeShop'
+  if unreadMessageCount > 0
+    title += " (#{unreadMessageCount})"
+  document.title = title
+
+windowFocused = ->
+  this.isActive = true
+  unreadMessageCount = 0
+  setDocumentTitle()
+
+$(window).focus ->
+  windowFocused()
+
+$(window).blur ->
+  this.isActive = false
+
 initialize = ->
+  window.isActive = true
+
   $command = $('#command')
   $command.focus()
   $command.on 'keyup', (event) ->
@@ -33,6 +54,10 @@ addUser = (user) ->
   $('#users').append($user)
 
 addMessage = (user, message) ->
+  if this.isActive == false
+    unreadMessageCount += 1
+    setDocumentTitle()
+
   $msg = $('<tr />')
   $msg.html("<td class='username'>#{user}</td><td class='message'>#{message}</td>")
   $('#messages').append($msg)

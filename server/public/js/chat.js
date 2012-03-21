@@ -1,8 +1,32 @@
 (function() {
-  var addMessage, addUser, initialize, socket;
+  var addMessage, addUser, initialize, setDocumentTitle, socket, unreadMessageCount, windowFocused;
+
+  unreadMessageCount = 0;
+
+  setDocumentTitle = function() {
+    var title;
+    title = 'CoffeeShop';
+    if (unreadMessageCount > 0) title += " (" + unreadMessageCount + ")";
+    return document.title = title;
+  };
+
+  windowFocused = function() {
+    this.isActive = true;
+    unreadMessageCount = 0;
+    return setDocumentTitle();
+  };
+
+  $(window).focus(function() {
+    return windowFocused();
+  });
+
+  $(window).blur(function() {
+    return this.isActive = false;
+  });
 
   initialize = function() {
     var $command;
+    window.isActive = true;
     $command = $('#command');
     $command.focus();
     return $command.on('keyup', function(event) {
@@ -57,6 +81,10 @@
 
   addMessage = function(user, message) {
     var $msg;
+    if (this.isActive === false) {
+      unreadMessageCount += 1;
+      setDocumentTitle();
+    }
     $msg = $('<tr />');
     $msg.html("<td class='username'>" + user + "</td><td class='message'>" + message + "</td>");
     return $('#messages').append($msg);
