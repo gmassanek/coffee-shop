@@ -1,4 +1,5 @@
 unreadMessageCount = 0
+windowIsFocused = false
 
 setDocumentTitle = ->
   title = 'CoffeeShop'
@@ -7,7 +8,7 @@ setDocumentTitle = ->
   document.title = title
 
 windowFocused = ->
-  this.isActive = true
+  windowIsFocused = true
   unreadMessageCount = 0
   setDocumentTitle()
 
@@ -15,10 +16,10 @@ $(window).focus ->
   windowFocused()
 
 $(window).blur ->
-  this.isActive = false
+  windowIsFocused = false
 
 initialize = ->
-  window.isActive = true
+  windowIsFocused = true
 
   $command = $('#command')
   $command.focus()
@@ -54,7 +55,7 @@ addUser = (user) ->
   $('#users').append($user)
 
 addMessage = (user, message) ->
-  if this.isActive == false
+  if windowIsFocused == false
     unreadMessageCount += 1
     setDocumentTitle()
 

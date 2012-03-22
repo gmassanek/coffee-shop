@@ -1,7 +1,9 @@
 (function() {
-  var addMessage, addUser, initialize, setDocumentTitle, socket, unreadMessageCount, windowFocused;
+  var addMessage, addUser, initialize, setDocumentTitle, socket, unreadMessageCount, windowFocused, windowIsFocused;
 
   unreadMessageCount = 0;
+
+  windowIsFocused = false;
 
   setDocumentTitle = function() {
     var title;
@@ -11,7 +13,7 @@
   };
 
   windowFocused = function() {
-    this.isActive = true;
+    windowIsFocused = true;
     unreadMessageCount = 0;
     return setDocumentTitle();
   };
@@ -21,12 +23,12 @@
   });
 
   $(window).blur(function() {
-    return this.isActive = false;
+    return windowIsFocused = false;
   });
 
   initialize = function() {
     var $command;
-    window.isActive = true;
+    windowIsFocused = true;
     $command = $('#command');
     $command.focus();
     return $command.on('keyup', function(event) {
@@ -81,7 +83,7 @@
 
   addMessage = function(user, message) {
     var $msg;
-    if (this.isActive === false) {
+    if (windowIsFocused === false) {
       unreadMessageCount += 1;
       setDocumentTitle();
     }
